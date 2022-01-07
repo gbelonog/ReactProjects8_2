@@ -5,24 +5,55 @@ export function StarShips(){
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
   
+  const [pageNumber, setPageNumber] = useState(1);
+  const [name, setName] = useState('');
+  const [rotationPeriod, setRotationPeriod] = useState(''); 
+  const [orbitalPeriod, setOrbitalPeriod] = useState(''); 
+  const [diameter, setDiameter] = useState('');
+  const [climate, setClimate] = useState('');
+  const [gravity, setGravity] = useState('');
+  const [terrain, setTerrain] = useState('');
+  const [surfaceWater, setSurfaceWater] = useState('');
+  const [population, setPopulation] = useState(''); 
+  const [residents, setResidents] = useState([]);
+  const [films, setFilms] = useState([]);
+  const [created, setCreated] = useState('');
+  const [edited, setEdited] = useState('');
+  const [url, setUrl] = useState('');
+
   useEffect(() => {
     let mountState = {
       isMount: true,
     };
 
-    fetch(`https://swapi.dev/api/starships/`)
+    fetch(`https://swapi.dev/api/planets/${pageNumber}`)
       .then((res) => {
         console.log('---> StarShips: res', res);
-        return res.json()
+        return res.json();
       })
       .then((data) => {
-        console.log('data in fetch', data);
         if (mountState.isMount) {
-          setError(null);
+          console.log('---> StarShips: data', data);
+          setError(null); 
           setStatus('success');
-          setData(data.results);
-        }
-      })
+         
+          setData(JSON.stringify(data));
+          setName(JSON.stringify(data.name));
+          setRotationPeriod(JSON.stringify(data.rotation_period));
+          setOrbitalPeriod(JSON.stringify(data.orbital_period));
+          setDiameter(JSON.stringify(data.diameter));
+          setClimate(JSON.stringify(data.climate));
+          setGravity(JSON.stringify(data.gravity));
+          setTerrain(JSON.stringify(data.terrain));
+          setSurfaceWater(JSON.stringify(data.surfaceWater));
+          setPopulation(JSON.stringify(data.population));
+          setResidents(JSON.stringify(data.residents));
+          setFilms(JSON.stringify(data.films));
+          setCreated(JSON.stringify(data.created));
+          setEdited(JSON.stringify(data.edited));
+          setUrl(JSON.stringify(data.url));
+       }
+      })      
       .catch((error) => {
         if (mountState.isMount) {
           console.log('---> StarShips: error', error);
@@ -31,53 +62,51 @@ export function StarShips(){
           setData(null);
         }
       })
-    
     return () => {
       mountState.isMount = false;
     }
-    },[]);
-    console.log('data', data);
+    },[pageNumber]);
+
     return (
       <div className="StarShips">
         {status === 'loading' || status === 'initial' ? (
           <div>Loading...</div>
         ) : (
           <div>
-            {error === null ? (
-              <div>test
-                {data.map(e=>{
-                  return <div key={e.name}>
-                  <div>Name: {e.name}</div>
-                  <div>Model: {e.model}</div>
-                  <div>MGLT: {e.MGLT}</div>
-                  <div>Cargo capacity: {e.cargo_capacity}</div>
-                  <div>Consumables: {e.consumables}</div>
-                  <div>Cost in credits: {e.cost_in_credits}</div>
-                  <div>Сreated: {e.сreated}</div>
-                  <div>Сrew: {e.crew}</div>
-                  <div>Edited: {e.edited}</div>
-                  <div>Hyperdrive rating: {e.hyperdrive_rating}</div>
-                  <div>Length: {e.length}</div>
-                  <div>Manufacturer: {e.manufacturer}</div>
-                  <div>Max atmosphering speed: {e.max_atmosphering_speed}</div>
-                  <div>Passengers: {e.passengers}</div>
-                  <div>Starship class: {e.starship_class}</div>
-                  <div>url: {e.url}</div>
-                  <div>Films: {e.films.map((e,i) => {return <li key={i}>{e}</li>})}</div>
-                  <div>Pilots: {e.pilots.map((e,i) => {return <li key={i}>{e}</li>})}</div>
-                  <hr/>
-                  </div>
-                  })}
+            {error === null ? ( <>
+
+              <button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>previous</button>
+              <button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>{(pageNumber > 1)? pageNumber - 1 : pageNumber}</button>
+              <button onClick={() => setPageNumber(pageNumber)}>{pageNumber}</button>
+              <button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>{(pageNumber < 60)? pageNumber + 1 : pageNumber}</button>
+              <button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>next</button>
+              <div>
+                {data}
+                <div>name:{name}</div>
+                <div>rotation_period: {rotationPeriod}</div>
+                <div>orbital_period: {orbitalPeriod}</div>
+                <div>diameter: {diameter}</div>
+                <div>climate: {climate}</div>
+                <div>gravity: {gravity}</div>
+                <div>terrain: {terrain}</div>
+                <div>surface_water: {surfaceWater}</div>
+                <div>population: {population}</div>
+                <div>residents: {residents}</div>
+                <div>films: {films}</div>
+                <div>created: {created}</div>
+                <div>edited: {edited}</div>
+                <div>url: {url}</div>                
               </div>
-              
-            ) : (
-              <span style={{ color: 'red' }}>{error}</span>
-            )}
+                </>
+             ) : (
+               <span style={{ color: 'red' }}>{error}</span>
+             )
+          }  
           </div>
         )}
       </div>
-    );
-  }
+    )
+    }
 
 
 
