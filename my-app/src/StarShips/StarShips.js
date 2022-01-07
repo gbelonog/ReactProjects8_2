@@ -61,11 +61,8 @@ export function StarShips(){
             setIsHiddenNextButton(false)}
           if(pageNumber === 60) { 
             setIsHiddenPreviousButton(true) 
-          } else { setIsHiddenPreviousButton(false) }
-      
-          
+          } else { setIsHiddenPreviousButton(false) }    
        }
-       
       })      
       .catch((error) => {
         if (mountState.isMount) {
@@ -89,9 +86,6 @@ export function StarShips(){
         ) : (
           <div>
             {error === null ? ( <>
-            {console.log('pageNumber', pageNumber)}
-            {console.log('isHiddenNextButton', isHiddenNextButton)}
-            {console.log('isHiddenPreviousButton', isHiddenPreviousButton)}
               {!isHiddenNextButton && (<button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>previous</button>)}
               {!isHiddenNextButton && (
                 <button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>
