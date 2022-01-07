@@ -21,6 +21,9 @@ export function StarShips(){
   const [edited, setEdited] = useState('');
   const [url, setUrl] = useState('');
 
+  const [isHiddenNextButton, setIsHiddenNextButton] = useState(false);
+  const [isHiddenPreviousButton, setIsHiddenPreviousButton] = useState(false);
+
   useEffect(() => {
     let mountState = {
       isMount: true,
@@ -52,7 +55,17 @@ export function StarShips(){
           setCreated(JSON.stringify(data.created));
           setEdited(JSON.stringify(data.edited));
           setUrl(JSON.stringify(data.url));
+          if(pageNumber === 1) { 
+            setIsHiddenNextButton(true)
+          }else{
+            setIsHiddenNextButton(false)}
+          if(pageNumber === 60) { 
+            setIsHiddenPreviousButton(true) 
+          } else { setIsHiddenPreviousButton(false) }
+      
+          
        }
+       
       })      
       .catch((error) => {
         if (mountState.isMount) {
@@ -65,8 +78,10 @@ export function StarShips(){
     return () => {
       mountState.isMount = false;
     }
-    },[pageNumber]);
+            
 
+    },[pageNumber]);
+    
     return (
       <div className="StarShips">
         {status === 'loading' || status === 'initial' ? (
@@ -74,12 +89,17 @@ export function StarShips(){
         ) : (
           <div>
             {error === null ? ( <>
-
-              <button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>previous</button>
-              <button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>{(pageNumber > 1)? pageNumber - 1 : pageNumber}</button>
+            {console.log('pageNumber', pageNumber)}
+            {console.log('isHiddenNextButton', isHiddenNextButton)}
+            {console.log('isHiddenPreviousButton', isHiddenPreviousButton)}
+              {!isHiddenNextButton && (<button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>previous</button>)}
+              {!isHiddenNextButton && (
+                <button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>
+                  {(pageNumber > 1)? pageNumber - 1 : pageNumber}
+                </button>)}
               <button onClick={() => setPageNumber(pageNumber)}>{pageNumber}</button>
-              <button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>{(pageNumber < 60)? pageNumber + 1 : pageNumber}</button>
-              <button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>next</button>
+              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>{(pageNumber < 60)? pageNumber + 1 : pageNumber}</button>)}
+              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>next</button>)}
               <div>
                 {data}
                 <div>name:{name}</div>
