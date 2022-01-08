@@ -5,6 +5,7 @@ export function StarShips(){
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
   
+  const [numberOfPlanets, setNumberOfPlanets] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [name, setName] = useState('');
   const [rotationPeriod, setRotationPeriod] = useState(''); 
@@ -28,6 +29,27 @@ export function StarShips(){
     let mountState = {
       isMount: true,
     };
+
+    fetch(`https://swapi.dev/api/planets/`)
+      .then((res) => {
+        console.log('---> All Planets: res', res);
+        return res.json();
+      })
+      .then((data) => {
+        if (mountState.isMount) {
+          console.log('---> All Planets: data', data);
+          setNumberOfPlanets(JSON.stringify(data.count));
+       }
+      })      
+      .catch((error) => {
+        if (mountState.isMount) {
+          console.log('---> Planets: error', error);
+          setError(error.message);
+          setData(null);
+        }
+      })
+
+
 
     fetch(`https://swapi.dev/api/planets/${pageNumber}`)
       .then((res) => {
@@ -59,7 +81,7 @@ export function StarShips(){
             setIsHiddenNextButton(true)
           }else{
             setIsHiddenNextButton(false)}
-          if(pageNumber === 60) { 
+          if(pageNumber === numberOfPlanets) { 
             setIsHiddenPreviousButton(true) 
           } else { setIsHiddenPreviousButton(false) }    
        }
@@ -75,9 +97,7 @@ export function StarShips(){
     return () => {
       mountState.isMount = false;
     }
-            
-
-    },[pageNumber]);
+  },[pageNumber]);
     
     return (
       <div className="StarShips">
@@ -92,9 +112,10 @@ export function StarShips(){
                   {(pageNumber > 1)? pageNumber - 1 : pageNumber}
                 </button>)}
               <button onClick={() => setPageNumber(pageNumber)}>{pageNumber}</button>
-              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>{(pageNumber < 60)? pageNumber + 1 : pageNumber}</button>)}
-              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>next</button>)}
+              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < numberOfPlanets)? pageNumber + 1 : pageNumber)}>{(pageNumber < numberOfPlanets)? pageNumber + 1 : pageNumber}</button>)}
+              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < numberOfPlanets)? pageNumber + 1 : pageNumber)}>next</button>)}
               <div>
+                numberOfPlanets{numberOfPlanets}
                 {data}
                 <div>name:{name}</div>
                 <div>rotation_period: {rotationPeriod}</div>
