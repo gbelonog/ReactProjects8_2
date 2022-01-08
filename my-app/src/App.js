@@ -1,4 +1,4 @@
-import { StarShips } from './StarShips/StarShips';
+import { StarShips } from './Planets/Planets';
 import './App.css';
 
 function App() {

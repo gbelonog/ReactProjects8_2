@@ -31,12 +31,12 @@ export function StarShips(){
 
     fetch(`https://swapi.dev/api/planets/${pageNumber}`)
       .then((res) => {
-        console.log('---> StarShips: res', res);
+        console.log('---> Planets: res', res);
         return res.json();
       })
       .then((data) => {
         if (mountState.isMount) {
-          console.log('---> StarShips: data', data);
+          console.log('---> Planets: data', data);
           setError(null); 
           setStatus('success');
          
@@ -66,7 +66,7 @@ export function StarShips(){
       })      
       .catch((error) => {
         if (mountState.isMount) {
-          console.log('---> StarShips: error', error);
+          console.log('---> Planets: error', error);
           setError(error.message);
           setStatus('error');
           setData(null);
