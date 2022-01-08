@@ -3,73 +3,38 @@ import React, {useEffect, useState} from 'react';
 export function StarShips(){
   const [status, setStatus] = useState('initial');
   const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
   
-  const [pageNumber, setPageNumber] = useState(1);
-  const [name, setName] = useState('');
-  const [rotationPeriod, setRotationPeriod] = useState(''); 
-  const [orbitalPeriod, setOrbitalPeriod] = useState(''); 
-  const [diameter, setDiameter] = useState('');
-  const [climate, setClimate] = useState('');
-  const [gravity, setGravity] = useState('');
-  const [terrain, setTerrain] = useState('');
-  const [surfaceWater, setSurfaceWater] = useState('');
-  const [population, setPopulation] = useState(''); 
-  const [residents, setResidents] = useState([]);
-  const [films, setFilms] = useState([]);
-  const [created, setCreated] = useState('');
-  const [edited, setEdited] = useState('');
-  const [url, setUrl] = useState('');
-
-  const [isHiddenNextButton, setIsHiddenNextButton] = useState(false);
-  const [isHiddenPreviousButton, setIsHiddenPreviousButton] = useState(false);
+  const [listOfPlanets, setListOfPlanets] = useState([]);
+  const [page, setPage] = useState('"https://swapi.dev/api/planets/?page=1"');
+  const [next, setNext] = useState('"https://swapi.dev/api/planets/?page=1"');
+  const [previous, setPrevious] = useState('"https://swapi.dev/api/planets/?page=1"');
 
   useEffect(() => {
     let mountState = {
       isMount: true,
     };
-
-    fetch(`https://swapi.dev/api/planets/${pageNumber}`)
+  
+    fetch(page.replace(/"/g,''))
       .then((res) => {
-        console.log('---> StarShips: res', res);
+        console.log('---> Planets: res', res);
         return res.json();
       })
       .then((data) => {
         if (mountState.isMount) {
-          console.log('---> StarShips: data', data);
+          console.log('---> Planets: data', data);
           setError(null); 
           setStatus('success');
-         
-          setData(JSON.stringify(data));
-          setName(JSON.stringify(data.name));
-          setRotationPeriod(JSON.stringify(data.rotation_period));
-          setOrbitalPeriod(JSON.stringify(data.orbital_period));
-          setDiameter(JSON.stringify(data.diameter));
-          setClimate(JSON.stringify(data.climate));
-          setGravity(JSON.stringify(data.gravity));
-          setTerrain(JSON.stringify(data.terrain));
-          setSurfaceWater(JSON.stringify(data.surfaceWater));
-          setPopulation(JSON.stringify(data.population));
-          setResidents(JSON.stringify(data.residents));
-          setFilms(JSON.stringify(data.films));
-          setCreated(JSON.stringify(data.created));
-          setEdited(JSON.stringify(data.edited));
-          setUrl(JSON.stringify(data.url));
-          if(pageNumber === 1) { 
-            setIsHiddenNextButton(true)
-          }else{
-            setIsHiddenNextButton(false)}
-          if(pageNumber === 60) { 
-            setIsHiddenPreviousButton(true) 
-          } else { setIsHiddenPreviousButton(false) }    
+
+          setListOfPlanets(JSON.stringify(data.results).split('},'));
+          setNext(JSON.stringify(data.next));
+          setPrevious(JSON.stringify(data.previous));   
        }
       })      
       .catch((error) => {
         if (mountState.isMount) {
-          console.log('---> StarShips: error', error);
+          console.log('---> Planets: error', error);
           setError(error.message);
           setStatus('error');
-          setData(null);
         }
       })
     return () => {
@@ -77,7 +42,7 @@ export function StarShips(){
     }
             
 
-    },[pageNumber]);
+    },[page]);
     
     return (
       <div className="StarShips">
@@ -85,31 +50,22 @@ export function StarShips(){
           <div>Loading...</div>
         ) : (
           <div>
-            {error === null ? ( <>
-              {!isHiddenNextButton && (<button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>previous</button>)}
-              {!isHiddenNextButton && (
-                <button onClick={() => setPageNumber((pageNumber > 1)? pageNumber - 1 : pageNumber)}>
-                  {(pageNumber > 1)? pageNumber - 1 : pageNumber}
-                </button>)}
-              <button onClick={() => setPageNumber(pageNumber)}>{pageNumber}</button>
-              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>{(pageNumber < 60)? pageNumber + 1 : pageNumber}</button>)}
-              {!isHiddenPreviousButton && (<button onClick={() => setPageNumber((pageNumber < 60)? pageNumber + 1 : pageNumber)}>next</button>)}
+            {error === null ? ( <>  
+              {(previous !== 'null') && (<button onClick={() => setPage(previous)}>previous1</button>)}
+              {(previous !== 'null') && (<button onClick={() => setPage(previous)}>{(previous.replace(/"/g,'')).slice(previous.indexOf('='))}</button>)}
+              
+              <button>{(page.replace(/"/g,'')).slice(page.indexOf('='))}</button>
+
+              {(next !== 'null') &&<button onClick={() => setPage(next)}>{(next.replace(/"/g,'')).slice(next.indexOf('='))}</button>}
+              {(next !== 'null') &&<button onClick={() => setPage(next)}>next1</button>}
+                          
               <div>
-                {data}
-                <div>name:{name}</div>
-                <div>rotation_period: {rotationPeriod}</div>
-                <div>orbital_period: {orbitalPeriod}</div>
-                <div>diameter: {diameter}</div>
-                <div>climate: {climate}</div>
-                <div>gravity: {gravity}</div>
-                <div>terrain: {terrain}</div>
-                <div>surface_water: {surfaceWater}</div>
-                <div>population: {population}</div>
-                <div>residents: {residents}</div>
-                <div>films: {films}</div>
-                <div>created: {created}</div>
-                <div>edited: {edited}</div>
-                <div>url: {url}</div>                
+                
+            
+                <p></p>
+                {listOfPlanets.map(e => {
+                  return <div><hr></hr>{e.split(',').map(el => {return <li>{el}</li>})}</div>
+                })}
               </div>
                 </>
              ) : (
