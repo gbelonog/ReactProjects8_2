@@ -51,13 +51,13 @@ export function StarShips(){
         ) : (
           <div>
             {error === null ? ( <>  
-              {(previous !== 'null') && (<button onClick={() => setPage(previous)}>previous1</button>)}
+              {(previous !== 'null') && (<button onClick={() => setPage(previous)}>previous</button>)}
               {(previous !== 'null') && (<button onClick={() => setPage(previous)}>{(previous.replace(/"/g,'')).slice(previous.indexOf('='))}</button>)}
               
               <button>{(page.replace(/"/g,'')).slice(page.indexOf('='))}</button>
 
               {(next !== 'null') &&<button onClick={() => setPage(next)}>{(next.replace(/"/g,'')).slice(next.indexOf('='))}</button>}
-              {(next !== 'null') &&<button onClick={() => setPage(next)}>next1</button>}
+              {(next !== 'null') &&<button onClick={() => setPage(next)}>next</button>}
                           
               <div>
                 <p></p>
