@@ -60,17 +60,15 @@ export function StarShips(){
               {(next !== 'null') &&<button onClick={() => setPage(next)}>next1</button>}
                           
               <div>
-                
-            
                 <p></p>
                 {listOfPlanets.map(e => {
                   return <div><hr></hr>{e.split(',').map(el => {return <li>{el}</li>})}</div>
                 })}
               </div>
-                </>
-             ) : (
-               <span style={{ color: 'red' }}>{error}</span>
-             )
+            </>
+            ) : (
+              <span style={{ color: 'red' }}>{error}</span>
+            )
           }  
           </div>
         )}
