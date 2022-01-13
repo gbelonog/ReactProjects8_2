@@ -38,7 +38,7 @@ export function StarShips(){
       .then((data) => {
         if (mountState.isMount) {
           console.log('---> All Planets: data', data);
-          setNumberOfPlanets(JSON.stringify(data.count));
+          setNumberOfPlanets(data.count + '');
        }
       })      
       .catch((error) => {
